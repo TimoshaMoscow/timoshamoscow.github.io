@@ -1,0 +1,276 @@
+body {
+    background-color: rgb(24, 26, 27);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    align-items: center;
+}
+
+
+body {
+  font-size: 18px;
+}
+
+
+
+p {
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    text-align: center;
+    margin-left: 100px;
+    margin-right: 100px;
+   
+}
+
+
+.Hi  {
+    color: white;
+    font-size: 40px;
+    text-align: center;
+    margin-left: 00px;
+    margin-right: 00px;
+}
+
+
+.title_2 {
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    margin-left: 00px;
+    margin-right: 00px;
+}
+
+.title {
+    width: 700px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 25px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li{
+   color: white;
+    font-size: 25px;
+    text-align: center;
+    margin-left: 00px;
+    margin-right: 00px; 
+    background-color: rgb(24, 26, 27);
+}
+
+
+img {
+    width: 700px;
+    margin-left: 10px;
+    margin-left: 10px;
+    border-radius: 25px;
+}
+
+.plate {
+    width: 500px;
+    
+}
+
+
+
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 10px; 
+}
+
+
+.item {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+   background-color: rgb(24, 26, 27); 
+    padding: 10px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    border-radius: 5px; 
+}
+
+
+.tovar {
+    max-width: 300px; 
+    height: auto;
+    object-fit: contain; 
+    margin-bottom: 10px; 
+
+}
+
+
+.item p {
+    font-size: 20px; 
+    line-height: 1.5; 
+    text-align: center; 
+    margin: 0; 
+}
+
+.item p a {
+    color: blue;
+    text-decoration: none;
+}
+
+.item p a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+button {
+    outline: none; 
+    border: 2px solid rgba(255, 255, 255, 0.3); 
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.08);      
+    backdrop-filter: blur(10px);                
+    -webkit-backdrop-filter: blur(10px);        
+    width: 200px;
+    height: 60px;
+    cursor: pointer;
+    color: white;
+    font-size: 20px;
+    margin: 10px;
+    transition: all 0.3s ease; 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);  
+}
+
+button:hover {
+    background: rgba(255, 255, 255, 0.2); 
+    color: white;
+    transform: scale(1.05);               
+}
+
+video {
+    width: 700px;
+    border-radius: 25px;
+}
+
+
+a {
+    color: rgb(151, 151, 151);
+}
+
+
+.lang {
+    width: 150px;
+}
+
+
+
+
+
+@media (max-width: 600px) {
+
+
+
+
+.container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+
+.item {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    background-color: rgb(24, 26, 27); 
+    padding: 10px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    border-radius: 5px; 
+    width: 100%; 
+}
+
+
+.tovar {
+    max-width: 80%; 
+    height: auto;
+    object-fit: cover; 
+    margin-bottom: 10px; 
+}
+
+
+.item p {
+    font-size: 16px; 
+    line-height: 1.5; 
+    text-align: center; 
+    margin: 0; 
+}
+
+.item p a {
+    color: blue;
+    text-decoration: none;
+}
+
+.item p a:hover {
+    text-decoration: underline;
+}
+
+img {
+    width: 300px;
+    margin-left: 10px;
+    margin-left: 10px;
+    border-radius: 25px;
+}
+
+p {
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    text-align: center;
+    margin-left: 50px;
+    margin-right: 50px;
+   
+}
+
+
+.Hi  {
+    color: white;
+    font-size: 25px;
+    text-align: center;
+    margin-left: 00px;
+    margin-right: 00px;
+}
+
+
+.title_2 {
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    margin-left: 00px;
+    margin-right: 00px;
+}
+
+.title {
+    width: 400px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 25px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li{
+   color: white;
+    font-size: 25px;
+    text-align: center;
+    margin-left: 00px;
+    margin-right: 00px; 
+    background-color: rgb(24, 26, 27);
+}
+
+video {
+    width: 400px;
+    border-radius: 25px;
+}
+
+
+}
