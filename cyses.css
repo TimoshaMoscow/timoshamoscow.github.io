@@ -124,9 +124,9 @@ img {
 
 button {
     outline: none; 
-    border: 2px solid rgba(255, 255, 255, 0.3); 
+    border: 2px solid rgb(141, 144, 184); 
     border-radius: 25px;
-    background: rgba(255, 255, 255, 0.08);      
+    background: rgb(50, 56, 133);      
     backdrop-filter: blur(10px);                
     -webkit-backdrop-filter: blur(10px);        
     width: 200px;
@@ -140,7 +140,7 @@ button {
 }
 
 button:hover {
-    background: rgba(255, 255, 255, 0.2); 
+    background: rgb(89, 97, 194); 
     color: white;
     transform: scale(1.05);               
 }
