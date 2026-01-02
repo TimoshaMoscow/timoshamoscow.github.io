@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /wp-admin/
+Disallow: /admin/
+Disallow: /cgi-bin/
+Disallow: /*?s=
+Disallow: /search/
+# Закрываем папки с временными файлами, неинформативными страницами
+Disallow: /temp/
+Disallow: /tmp/
+
+# Разрешаем индексацию всех остальных страниц
+Allow: /
+
+# Указываем путь к карте сайта
+Sitemap: https://timoshamoscow.github.io/sitemap.xml
