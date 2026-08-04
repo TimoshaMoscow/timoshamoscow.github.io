@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="cyses.css">
+    <title>404 — Страница не найдена</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, follow">
+    <style>
+        /* дополнительный локальный стиль для 404, чтобы не править основной css */
+        .error-code {
+            font-size: 80px;
+            font-weight: 700;
+            color: #5a5f9e;
+            text-shadow: 0 0 20px rgba(90, 95, 158, 0.4);
+            margin: 20px 0 10px;
+            letter-spacing: 4px;
+        }
+        .error-message {
+            font-size: 28px;
+            color: #e0e0ff;
+            margin-bottom: 30px;
+        }
+        .suggest-title {
+            color: #b0b4d6;
+            font-size: 22px;
+            margin: 40px 0 20px;
+            opacity: 0.8;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .button-group button {
+            width: 200px;
+            min-width: 160px;
+            flex: 0 1 auto;
+        }
+        .back-home {
+            margin-top: 40px;
+        }
+        .back-home button {
+            background: rgba(50, 56, 133, 0.5);
+            border-color: #6a6fa8;
+        }
+        .back-home button:hover {
+            background: rgb(89, 97, 194);
+        }
+        @media (max-width: 600px) {
+            .error-code {
+                font-size: 56px;
+            }
+            .error-message {
+                font-size: 22px;
+            }
+            .button-group button {
+                width: 180px;
+                font-size: 17px;
+                height: 54px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- основной контент 404 -->
+    <div style="padding: 20px 10px 40px;">
+
+        <p class="Hi" style="margin-top: 20px;">🤔 Ой, что-то пошло не так...</p>
+
+        <div class="error-code">404</div>
+        <div class="error-message">Страница не найдена</div>
+
+        <!-- подпись с предложением -->
+        <div class="suggest-title">Возможно, вы искали:</div>
+
+        <!-- три кнопки с тестовыми ссылками (замените href на нужные) -->
+        <div class="button-group">
+            <a href="https://timoshamoscow.github.io/taiprompts.github.io/"><button>TAIPrompts — Генератор промптов</button></a>
+            <a href="https://timoshamoscow.github.io/spraute_docs/"><button>Spraute Документация</button></a>
+            <a href="https://timoshamoscow.github.io/sibylevec-site.github.io/"><button>Сибилевец</button></a>
+        </div>
+
+    </div>
+
+</body>
+</html>
