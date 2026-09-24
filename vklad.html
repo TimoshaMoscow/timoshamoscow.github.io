@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <link rel="stylesheet" href="cyses.css">
-        <title>Ваш вклад — Тимошка из Москвы</title>
+        <title>404 — Страница не найдена</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="google-site-verification" content="jBY-ytvwYjSY1Jn9kXCqns11_XIrfqZlssMgNCpi8t0" />
+        <meta name="yandex-verification" content="d0893626d7c2e4e9" />
         <meta charset="UTF-8">
-        <meta name="description" content="Официальный список помощи ютуберу по майнкрафту — Тимошка из Москвы"/>
         <meta name="keywords" content="тимошка из москвы, официальный, ютубер, блогер, стример, майнкрафт, taiprompts, хранилище, промпты, реклама, итд, самый популярный пост, новки"/>
         <meta name="robots" content="index, follow"/>
-        <link rel="canonical" href="https://timoshamoscow.github.io/vklad.html">
-
+        <link rel="canonical" href="https://timoshamoscow.github.io/">
+        <meta property="og:title" content="404 — Страница не найдена">
+        <meta property="og:url" content="https://timoshamoscow.github.io/">
+        <meta property="og:type" content="website">
         <script nowprocket data-noptimize="1" data-cfasync="false" data-wpfc-render="false" seraph-accel-crit="1" data-no-defer="1">
   (function () {
       var script = document.createElement("script");
@@ -18,37 +21,90 @@
       document.head.appendChild(script);
   })();
         </script>
-    </head>
-
+    <style>
+        /* дополнительный локальный стиль для 404, чтобы не править основной css */
+        .error-code {
+            font-size: 80px;
+            font-weight: 700;
+            color: #5a5f9e;
+            text-shadow: 0 0 20px rgba(90, 95, 158, 0.4);
+            margin: 20px 0 10px;
+            letter-spacing: 4px;
+        }
+        .error-message {
+            font-size: 28px;
+            color: #e0e0ff;
+            margin-bottom: 30px;
+        }
+        .suggest-title {
+            color: #b0b4d6;
+            font-size: 22px;
+            margin: 40px 0 20px;
+            opacity: 0.8;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .button-group button {
+            width: 200px;
+            min-width: 160px;
+            flex: 0 1 auto;
+        }
+        .back-home {
+            margin-top: 40px;
+        }
+        .back-home button {
+            background: rgba(50, 56, 133, 0.5);
+            border-color: #6a6fa8;
+        }
+        .back-home button:hover {
+            background: rgb(89, 97, 194);
+        }
+        @media (max-width: 600px) {
+            .error-code {
+                font-size: 56px;
+            }
+            .error-message {
+                font-size: 22px;
+            }
+            .button-group button {
+                width: 180px;
+                font-size: 17px;
+                height: 54px;
+            }
+        }
+    </style>
+</head>
 <body>
 
+    <!-- основной контент 404 -->
+    <div style="padding: 20px 10px 40px;">
 
-<p class="Hi">Как вы можете повлиять на проект?</p>
+        <p class="Hi" style="margin-top: 20px;">Ой, что-то пошло не так...</p>
 
-<div>
-    <a href="https://taplink.cc/timoshamoscow"><button>Поддержать меня</button></a>
-</div>
-  
-<div>
-    <a href="https://timoshamoscow.github.io/taiprompts.github.io/"><button>Генерировать промпты</button></a>
-</div>
+        <div class="error-code">404</div>
+        <div class="error-message">Страница не найдена</div>
 
-<div>
-    <a href="https://timoshamoscow.github.io/hranilishe.github.io/"><button>Продвигать статьи в топ</button></a>
-</div>
+        <!-- подпись с предложением -->
+        <div class="suggest-title">Возможно, вы искали:</div>
 
-<div>
-    <a href="https://xn--d1ah4a.com/@timosha_moscow/post/cc325e1d-e2c8-4d84-b533-982035f8610b"><button>Сделать самый популярный пост</button></a>
-</div>
-
-
-
-<div>
-    <a href="./index.html"><button>На главную</button></a>
-</div>
-
-
-
+        <!-- три кнопки с тестовыми ссылками (замените href на нужные) -->
+        <div class="button-group">
+            <a href="https://timoshamoscow.github.io/taiprompts.github.io/"><button>TAIPrompts — Генератор промптов для нейросетей</button></a>
+            <a href="https://timoshamoscow.github.io/spraute_docs/"><button>Spraute Engine — Движок для  историй в Minecraft | Документация</button></a>
+            <a href="https://timoshamoscow.github.io/sibylevec-site.github.io/"><button>Сибилевец — Русский язык 2.0</button></a>
+            <a href="https://timoshamoscow.github.io/test/"><button>Тестовый лендинг — Тут тестирую всякое говно 😊</button></a>
+            <a href="https://timoshamoscow.github.io/creativetools.github.io/"><button>CreativeTools — Креативные инструменты на все случаи жизни</button></a>
+            <a href="https://timoshamoscow.github.io/tplayer/"><button>TPlayer — Плеер нового поколения для ваших видео</button></a>
+            <a href="https://timoshamoscow.github.io/belyoene.github.io/"><button>Белойн — Вне цифрового шума</button></a>
+            <a href="https://timoshamoscow.github.io/tstudios/"><button>TStudios — Скины, рендеры и превью Minecraft на заказ</button></a>
+        </div>
+    </div>
 
 </body>
 </html>
