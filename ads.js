@@ -45,7 +45,7 @@
             {
                 id: 'ad-left-2',
                 title: '🎚️ YATAVO STORE',
-                description: 'Прокси Telegam, Настройка VPS и удобный VPN - всё это YATAVO STORE! Промокод TIM даёт скидку 15%.',
+                description: 'Прокси Telegam, Настройка VPS и удобный VPN! Промокод TIM даёт скидку 15%.',
                 buttonText: 'Подключить',
                 link: 'https://t.me/yatavostore',
                 color: '#00ba22',
@@ -55,7 +55,7 @@
             {
                 id: 'ad-left-3',
                 title: '🎮 Удобный майнкрафт лаунчер',
-                description: 'MILLIDA Лаунчер - лучший лаунчер для Майнкрафт, заменяет Дискорд, Модринт, многие другие игры и сайт MC Tiers. Промокод Timosha_Moscow в магазин лаунчера - кейс с косметикой',
+                description: 'MILLIDA Лаунчер - лучший лаунчер для Майнкрафт, заменяет Дискорд, Модринт и сайт MC Tiers. Промокод Timosha_Moscow в магазине лаунчера даёт кейс с косметикой',
                 buttonText: 'Скачать',
                 link: 'https://millida.net/?ref=46DXDAMT',
                 color: '#00ba22',
