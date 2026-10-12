@@ -44,22 +44,32 @@
             },
             {
                 id: 'ad-left-2',
-                title: '🔮 Язык будущего (проще русского)',
-                description: 'Простой, логичный, современный. Создан Тимофеем Сибилевым для лёгкого общения',
-                buttonText: 'Узнать больше',
-                link: 'https://timoshamoscow.github.io/sibylevec-site.github.io/',
-                color: '#3ea9bf',
-                icon: '🔮',
-                label: 'Реклама'
-            },
-            {
-                id: 'ad-left-3',
-                title: '🎚️ YATAVO STORE ',
+                title: '🎚️ YATAVO STORE',
                 description: 'Прокси Telegam, Настройка VPS и удобный VPN - всё это YATAVO STORE! Промокод TIM даёт скидку 15%.',
                 buttonText: 'Подключить',
                 link: 'https://t.me/yatavostore',
                 color: '#00ba22',
                 icon: '🎚️',
+                label: 'Реклама'
+            },
+            {
+                id: 'ad-left-3',
+                title: '🎮 Удобный майнкрафт лаунчер',
+                description: 'MILLIDA Лаунчер - лучший лаунчер для Майнкрафт, заменяет Дискорд, Модринт, многие другие игры и сайт MC Tiers. Промокод Timosha_Moscow в магазин лаунчера - кейс с косметикой',
+                buttonText: 'Скачать',
+                link: 'https://millida.net/?ref=46DXDAMT',
+                color: '#00ba22',
+                icon: '🎮',
+                label: 'Реклама'
+            },
+            {
+                id: 'ad-left-4',
+                title: '🎨 Студия скинов, рендеров и многого другого по Minecraft',
+                description: 'Индивидуальный дизайн, быстрые сроки и доступные цены. От идеи до готового результата — за 1-2 дня.',
+                buttonText: 'Заказать',
+                link: 'https://timoshamoscow.github.io/tstudios/',
+                color: '#3b82f6',
+                icon: '🎨',
                 label: 'Реклама'
             }
         ],
@@ -78,22 +88,32 @@
             },
             {
                 id: 'ad-right-2',
-                title: '🎨 Студия скинов, рендеров и многого другого по Minecraft',
-                description: 'Индивидуальный дизайн, быстрые сроки и доступные цены. От идеи до готового результата — за 1-2 дня.',
-                buttonText: 'Заказать',
-                link: 'https://timoshamoscow.github.io/tstudios/',
-                color: '#3b82f6',
-                icon: '🎨',
-                label: 'Реклама'
-            },
-            {
-                id: 'ad-right-3',
                 title: '🎥 Коллекция профессиональных инструментов',
                 description: 'Все необходимые инструменты для работы с документами, цветами, форматами и аудио в одном месте. Работайте эффективно прямо в браузере.',
                 buttonText: 'Узнать больше',
                 link: 'https://timoshamoscow.github.io/creativetools.github.io/',
                 color: '#3ea9bf',
                 icon: '🎥',
+                label: 'Реклама'
+            },
+            {
+                id: 'ad-right-3',
+                title: '🔮 Язык будущего (проще русского)',
+                description: 'Простой, логичный, современный. Создан Тимофеем Сибилевым для лёгкого общения',
+                buttonText: 'Узнать больше',
+                link: 'https://timoshamoscow.github.io/sibylevec-site.github.io/',
+                color: '#3ea9bf',
+                icon: '🔮',
+                label: 'Реклама'
+            },
+            {
+                id: 'ad-right-4',
+                title: '🔥 Багрянство',
+                description: 'Это уникальный Minecraft проект с кастомными плагинами и картой, там вас ждёт: Расы, могилы, крюки, Рисование, Фаерболы и огнестрел!',
+                buttonText: 'Играть',
+                link: 'https://discord.gg/6eaRvUKXXs',
+                color: '#ff0000',
+                icon: '🔥',
                 label: 'Реклама'
             }
         ]
