@@ -75,6 +75,16 @@
                 color: '#3b82f6',
                 icon: '🎨',
                 label: 'Реклама'
+            },
+            {
+                id: 'ad-right-3',
+                title: '🎥 Коллекция профессиональных инструментов',
+                description: 'Все необходимые инструменты для работы с документами, цветами, форматами и аудио в одном месте. Работайте эффективно прямо в браузере.',
+                buttonText: 'Узнать больше',
+                link: 'https://timoshamoscow.github.io/creativetools.github.io/',
+                color: '#3ea9bf',
+                icon: '🎥',
+                label: 'Реклама'
             }
         ]
     };
