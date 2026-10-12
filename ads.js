@@ -51,6 +51,16 @@
                 color: '#3ea9bf',
                 icon: '🔮',
                 label: 'Реклама'
+            },
+            {
+                id: 'ad-left-3',
+                title: '🎚️ YATAVO STORE ',
+                description: 'Прокси Telegam, Настройка VPS и удобный VPN - всё это YATAVO STORE! Промокод TIM даёт скидку 15%.',
+                buttonText: 'Подключить',
+                link: 'https://t.me/yatavostore',
+                color: '#00ba22',
+                icon: '🎚️',
+                label: 'Реклама'
             }
         ],
 
