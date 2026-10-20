@@ -1,37 +1,33 @@
 /* ===== ads.js ===== */
-/* Фиксированные рекламные баннеры по бокам страницы */
+/* Рекламные баннеры */
 
 (function() {
     'use strict';
 
     // ============================================================
-    // НАСТРОЙКИ РЕКЛАМЫ — РЕДАКТИРУЙТЕ ЗДЕСЬ
+    // НАСТРОЙКИ
     // ============================================================
-    
-    // используется как реферальная метка в ссылках
     const REFERRAL_TAG = 'Timosha_Moscow';
-    
+
     const ADS_CONFIG = {
-        // Показывать ли рекламу (true/false)
         enabled: true,
-
-        // Задержка перед показом (мс)
         delay: 228,
-
-        // Сколько карточек максимум показывать с одной стороны
         maxPerSide: 2,
-
-        // Через сколько миллисекунд "мягко скрытая" реклама снова может показаться
-        // Например: 1000 * 60 * 60 * 24 = 1 день (24 часа)
-        // 1000 * 60 * 30 = 30 минут
-        // 1000 * 60 * 5 = 5 минут (для теста)
-        softHideDuration: 1000 * 60 * 30,
-
-        // Сколько реклам минимум должно быть с каждой стороны
         minPerSide: 2,
+        mobileMax: 1,
 
-        // Левая колонка рекламы
-        left: [
+        // Интервал показа полноэкранной рекламы (мс). 0 = выключено
+        fullscreenInterval: 1000 * 60 * 3, // 3 минуты
+        // Задержка перед первым полноэкранным показом
+        fullscreenFirstDelay: 1000 * 30, // 30 секунд
+
+        // Проверка перекрытия важных элементов (на ПК)
+        checkOverlap: true,
+        // Минимальная ширина экрана для проверки перекрытия
+        overlapMinWidth: 1200,
+
+        // Всё рекламное наполнение в одном массиве
+        ads: [
             {
                 id: 'ad-left-1',
                 title: '🚀 Лучший генератор промптов для нейросетей',
@@ -40,27 +36,30 @@
                 link: 'https://timoshamoscow.github.io/taiprompts.github.io/',
                 color: '#5e72e4',
                 icon: '🚀',
-                label: 'Реклама'
+                label: 'Реклама',
+                image: 'images/taiprompts.png'
             },
             {
                 id: 'ad-left-2',
                 title: '🎚️ YATAVO STORE',
-                description: 'Прокси Telegam, Настройка VPS и удобный VPN! Промокод TIM даёт скидку 15%.',
+                description: 'Прокси Telegram, настройка VPS и удобный VPN! Промокод TIM даёт скидку 15%.',
                 buttonText: 'Подключить',
                 link: 'https://t.me/yatavostore',
                 color: '#00ba22',
                 icon: '🎚️',
-                label: 'Реклама'
+                label: 'Реклама',
+                image: 'images/yatavostore.png'
             },
             {
                 id: 'ad-left-3',
                 title: '🎮 Удобный майнкрафт лаунчер',
-                description: 'MILLIDA Лаунчер - лучший лаунчер для Майнкрафт, заменяет Дискорд, Модринт и сайт MC Tiers. Промокод Timosha_Moscow в магазине лаунчера даёт кейс с косметикой',
+                description: 'MILLIDA Лаунчер — лучший лаунчер для Майнкрафт, заменяет Дискорд, Модринт и сайт MC Tiers. Промокод Timosha_Moscow в магазине лаунчера даёт кейс с косметикой',
                 buttonText: 'Скачать',
                 link: 'https://millida.net/?ref=46DXDAMT',
                 color: '#00ba22',
                 icon: '🎮',
-                label: 'Реклама'
+                label: 'Реклама',
+                image: 'images/millida.png'
             },
             {
                 id: 'ad-left-4',
@@ -70,12 +69,9 @@
                 link: 'https://timoshamoscow.github.io/tstudios/',
                 color: '#3b82f6',
                 icon: '🎨',
-                label: 'Реклама'
-            }
-        ],
-
-        // Правая колонка рекламы
-        right: [
+                label: 'Реклама',
+                image: 'images/tstudios.png'
+            },
             {
                 id: 'ad-right-1',
                 title: '🖥️ TPlayer',
@@ -84,7 +80,8 @@
                 link: 'https://timoshamoscow.github.io/tplayer/',
                 color: '#ff0000',
                 icon: '🖥️',
-                label: 'Реклама'
+                label: 'Реклама',
+                image: 'images/tplyer.png'
             },
             {
                 id: 'ad-right-2',
@@ -94,7 +91,8 @@
                 link: 'https://timoshamoscow.github.io/creativetools.github.io/',
                 color: '#3ea9bf',
                 icon: '🎥',
-                label: 'Реклама'
+                label: 'Реклама',
+                image: 'images/creativet.png'
             },
             {
                 id: 'ad-right-3',
@@ -104,17 +102,19 @@
                 link: 'https://timoshamoscow.github.io/sibylevec-site.github.io/',
                 color: '#3ea9bf',
                 icon: '🔮',
-                label: 'Реклама'
+                label: 'Реклама',
+                image: 'images/syb.png'
             },
             {
                 id: 'ad-right-4',
                 title: '🔥 Багрянство',
-                description: 'Это уникальный Minecraft проект с кастомными плагинами и картой, там вас ждёт: Расы, могилы, крюки, Рисование, Фаерболы и огнестрел!',
+                description: 'Это уникальный Minecraft проект с кастомными плагинами и картой. Расы, могилы, крюки, рисование, фаерболы и огнестрел!',
                 buttonText: 'Играть',
                 link: 'https://discord.gg/6eaRvUKXXs',
                 color: '#ff0000',
                 icon: '🔥',
-                label: 'Реклама'
+                label: 'Реклама',
+                image: 'images/bagryanez.png'
             }
         ]
     };
@@ -122,25 +122,15 @@
     // ============================================================
     // УТИЛИТЫ
     // ============================================================
-
-    /**
-     * Добавляет реферальную метку к URL.
-     */
     function addReferral(url, ref) {
         if (!url || url === '#') return url;
-        
         const separator = url.includes('?') ? '&' : '?';
-        
         if (/[?&]ref=/.test(url)) {
             return url.replace(/([?&]ref=)[^&]*/, '$1' + encodeURIComponent(ref));
         }
-        
         return url + separator + 'ref=' + encodeURIComponent(ref);
     }
 
-    /**
-     * Перемешивает массив (алгоритм Фишера–Йетса).
-     */
     function shuffleArray(array) {
         const arr = array.slice();
         for (let i = arr.length - 1; i > 0; i--) {
@@ -150,18 +140,33 @@
         return arr;
     }
 
-    /**
-     * Выбирает случайные N элементов из массива.
-     */
     function pickRandom(array, count) {
         if (array.length <= count) return array.slice();
         return shuffleArray(array).slice(0, count);
+    }
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+    function escapeAttr(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
     }
 
     // ============================================================
     // СТИЛИ
     // ============================================================
     const AD_STYLES = `
+        /* === Десктопные боковые баннеры === */
         .ct-ads-container {
             position: fixed;
             top: 50%;
@@ -179,12 +184,9 @@
             opacity: 1;
             pointer-events: auto;
         }
-        .ct-ads-left {
-            left: 15px;
-        }
-        .ct-ads-right {
-            right: 15px;
-        }
+        .ct-ads-left { left: 15px; }
+        .ct-ads-right { right: 15px; }
+
         .ct-ad-card {
             background: #ffffff;
             border-radius: 12px;
@@ -209,6 +211,13 @@
             width: 100%;
             background: #06b6d4;
         }
+        .ct-ad-image {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+            display: block;
+        }
         .ct-ad-label {
             position: absolute;
             top: 10px;
@@ -224,14 +233,8 @@
             text-transform: uppercase;
             z-index: 2;
         }
-        .ct-ad-body {
-            padding: 16px 14px 14px;
-        }
-        .ct-ad-icon {
-            font-size: 26px;
-            margin-bottom: 8px;
-            line-height: 1;
-        }
+        .ct-ad-body { padding: 16px 14px 14px; }
+        .ct-ad-icon { font-size: 26px; margin-bottom: 8px; line-height: 1; }
         .ct-ad-title {
             font-size: 13px;
             font-weight: 700;
@@ -263,313 +266,488 @@
             font-family: inherit;
             letter-spacing: 0.3px;
             text-decoration: none;
+            box-sizing: border-box;
         }
         .ct-ad-card:hover .ct-ad-btn {
             filter: brightness(1.1);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
         }
-        .ct-ad-close {
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid #e5e7eb;
-            color: #9ca3af;
-            font-size: 10px;
-            font-weight: 700;
-            cursor: pointer;
+
+        /* === Мобильный баннер сверху === */
+        .ct-ads-mobile {
             display: none;
+            position: sticky;
+            top: 0;
+            z-index: 800;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 8px 12px;
+            padding-top: calc(8px + env(safe-area-inset-top, 0px));
+        }
+        .ct-ads-mobile.visible { display: block; }
+        .ct-ad-mobile-inner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .ct-ad-mobile-img {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+        }
+        .ct-ad-mobile-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .ct-ad-mobile-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1.25;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .ct-ad-mobile-desc {
+            font-size: 11px;
+            color: #6b7280;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .ct-ad-mobile-arrow {
+            flex-shrink: 0;
+            color: #06b6d4;
+            font-size: 16px;
+        }
+        .ct-ad-mobile-label {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            font-size: 8px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* === Полноэкранное модальное окно === */
+        .ct-ads-fullscreen-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 10000;
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0;
-            line-height: 1;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .ct-ads-fullscreen-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .ct-ads-fullscreen {
+            background: #fff;
+            border-radius: 20px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .ct-ads-fullscreen-overlay.show .ct-ads-fullscreen {
+            transform: scale(1);
+        }
+        .ct-ads-fullscreen-topbar {
+            height: 6px;
+            width: 100%;
+        }
+        .ct-ads-fullscreen-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+            display: block;
+        }
+        .ct-ads-fullscreen-body {
+            padding: 24px 24px 22px;
+        }
+        .ct-ads-fullscreen-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .ct-ads-fullscreen-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        .ct-ads-fullscreen-desc {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.55;
+            margin-bottom: 20px;
+        }
+        .ct-ads-fullscreen-btn {
+            display: block;
+            width: 100%;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            background: #06b6d4;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+        .ct-ads-fullscreen-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.35);
+        }
+        .ct-ads-fullscreen-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            color: #374151;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             z-index: 3;
             transition: all 0.2s ease;
-            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
-        .ct-ad-card:hover .ct-ad-close {
-            display: flex;
-        }
-        .ct-ad-close:hover {
+        .ct-ads-fullscreen-close:hover {
             background: #ef4444;
-            color: #ffffff;
-            border-color: #ef4444;
+            color: #fff;
+            transform: rotate(90deg);
+        }
+        .ct-ads-fullscreen-label {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 2;
         }
 
         @media (max-width: 1400px) {
-            .ct-ads-container {
-                width: 150px;
-            }
-            .ct-ad-title {
-                font-size: 12px;
-            }
-            .ct-ad-description {
-                font-size: 10px;
-            }
-        }
-        @media (max-width: 1200px) {
-            .ct-ads-container {
-                display: none !important;
-            }
+            .ct-ads-container { width: 150px; }
+            .ct-ad-title { font-size: 12px; }
+            .ct-ad-description { font-size: 10px; }
         }
 
-        [data-theme="dark"] .ct-ad-card {
+        @media (max-width: 1200px) {
+            .ct-ads-container { display: none !important; }
+            .ct-ads-mobile { display: block; }
+        }
+
+        @media (max-width: 640px) {
+            .ct-ads-fullscreen-body { padding: 20px 18px 18px; }
+            .ct-ads-fullscreen-title { font-size: 17px; }
+            .ct-ads-fullscreen-desc { font-size: 13px; }
+            .ct-ads-fullscreen-image { height: 180px; }
+        }
+
+        [data-theme="dark"] .ct-ad-card,
+        [data-theme="dark"] .ct-ads-mobile,
+        [data-theme="dark"] .ct-ads-fullscreen {
             background: #1f2937;
-            border-color: #374151;
         }
-        [data-theme="dark"] .ct-ad-title {
-            color: #f3f4f6;
-        }
-        [data-theme="dark"] .ct-ad-description {
-            color: #9ca3af;
-        }
-        [data-theme="dark"] .ct-ad-label {
-            background: #111827;
-            border-color: #374151;
-            color: #6b7280;
-        }
-        [data-theme="dark"] .ct-ad-close {
-            background: #111827;
-            border-color: #374151;
-            color: #6b7280;
-        }
+        [data-theme="dark"] .ct-ad-title,
+        [data-theme="dark"] .ct-ad-mobile-title,
+        [data-theme="dark"] .ct-ads-fullscreen-title { color: #f3f4f6; }
+        [data-theme="dark"] .ct-ad-description,
+        [data-theme="dark"] .ct-ad-mobile-desc,
+        [data-theme="dark"] .ct-ads-fullscreen-desc { color: #9ca3af; }
+        [data-theme="dark"] .ct-ads-mobile { border-color: #374151; }
     `;
 
     // ============================================================
-    // ХРАНИЛИЩЕ "МЯГКО СКРЫТЫХ" РЕКЛАМ
-    // ============================================================
-
-    const STORAGE_KEY = 'ct_hidden_ads';
-
-    function getHiddenMap() {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (!raw) return {};
-            const parsed = JSON.parse(raw);
-            return (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) ? parsed : {};
-        } catch (e) {
-            return {};
-        }
-    }
-
-    function saveHiddenMap(map) {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
-        } catch (e) {
-            // localStorage переполнен или заблокирован
-        }
-    }
-
-    /**
-     * Скрывает рекламу "мягко" — запоминает время скрытия.
-     */
-    function hideAdSoft(adId) {
-        const map = getHiddenMap();
-        map[adId] = Date.now();
-        saveHiddenMap(map);
-    }
-
-    /**
-     * Проверяет, скрыта ли реклама прямо сейчас (с учётом времени).
-     */
-    function isAdHidden(adId) {
-        const map = getHiddenMap();
-        const hiddenAt = map[adId];
-        if (!hiddenAt) return false;
-
-        const elapsed = Date.now() - hiddenAt;
-        if (elapsed >= ADS_CONFIG.softHideDuration) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Очищает устаревшие записи.
-     */
-    function cleanupHiddenMap() {
-        const map = getHiddenMap();
-        const now = Date.now();
-        let changed = false;
-        for (const id in map) {
-            if (now - map[id] >= ADS_CONFIG.softHideDuration) {
-                delete map[id];
-                changed = true;
-            }
-        }
-        if (changed) saveHiddenMap(map);
-    }
-
-    // ============================================================
-    // ЛОГИКА ФИЛЬТРАЦИИ
-    // ============================================================
-
-    /**
-     * Возвращает массив реклам для показа с учётом:
-     * 1. Мягко скрытых (по таймеру)
-     * 2. Минимума реклам
-     * 3. Случайного выбора до maxPerSide
-     */
-    function selectAdsToShow(allAds) {
-        const visibleAds = allAds.filter(ad => !isAdHidden(ad.id));
-        let pool = visibleAds.slice();
-
-        if (pool.length < ADS_CONFIG.minPerSide) {
-            const map = getHiddenMap();
-            const hiddenAds = allAds
-                .filter(ad => !pool.some(p => p.id === ad.id))
-                .map(ad => ({
-                    ad: ad,
-                    hiddenAt: map[ad.id] || 0
-                }))
-                .sort((a, b) => a.hiddenAt - b.hiddenAt)
-                .map(entry => entry.ad);
-
-            const need = ADS_CONFIG.minPerSide - pool.length;
-            const forced = hiddenAds.slice(0, need);
-            pool = pool.concat(forced);
-        }
-
-        if (pool.length > ADS_CONFIG.maxPerSide) {
-            pool = pickRandom(pool, ADS_CONFIG.maxPerSide);
-        }
-
-        return pool;
-    }
-
-    // ============================================================
-    // ОТОБРАЖЕНИЕ
+    // СОЗДАНИЕ КАРТОЧЕК
     // ============================================================
 
     function createAdCard(ad) {
-        const card = document.createElement('div');
+        const card = document.createElement('a');
         card.className = 'ct-ad-card';
         card.dataset.adId = ad.id;
+        card.href = addReferral(ad.link, REFERRAL_TAG);
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
 
-        const finalLink = addReferral(ad.link, REFERRAL_TAG);
+        const imgHtml = ad.image
+            ? `<img class="ct-ad-image" src="${escapeAttr(ad.image)}" alt="" loading="lazy" onerror="this.style.display='none'">`
+            : '';
 
         card.innerHTML = `
             <div class="ct-ad-topbar" style="background: ${ad.color || '#06b6d4'};"></div>
-            <span class="ct-ad-label">${ad.label || 'Реклама'}</span>
-            <button class="ct-ad-close" title="Скрыть">✕</button>
+            ${imgHtml}
+            <span class="ct-ad-label">${escapeHtml(ad.label || 'Реклама')}</span>
             <div class="ct-ad-body">
                 ${ad.icon ? `<div class="ct-ad-icon">${ad.icon}</div>` : ''}
                 <div class="ct-ad-title">${escapeHtml(ad.title || '')}</div>
                 ${ad.description ? `<div class="ct-ad-description">${escapeHtml(ad.description)}</div>` : ''}
-                <a href="${escapeAttr(finalLink)}" target="_blank" rel="noopener noreferrer" class="ct-ad-btn" style="background: ${ad.color || '#06b6d4'};">
+                <div class="ct-ad-btn" style="background: ${ad.color || '#06b6d4'};">
                     ${escapeHtml(ad.buttonText || 'Подробнее')}
-                </a>
+                </div>
             </div>
         `;
-
-        const closeBtn = card.querySelector('.ct-ad-close');
-        closeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            hideAdSoft(ad.id);
-
-            card.style.transition = 'all 0.3s ease';
-            card.style.opacity = '0';
-            card.style.transform = 'translateX(' + (card.closest('.ct-ads-left') ? '-40px' : '40px') + ')';
-            
-            setTimeout(() => {
-                const container = card.parentNode;
-                card.remove();
-                if (container) {
-                    refillContainer(container);
-                }
-            }, 300);
-        });
-
         return card;
     }
 
-    /**
-     * Дозаполняет контейнер рекламой, если после закрытия
-     * осталось меньше minPerSide.
-     */
-    function refillContainer(container) {
+    function createMobileBanner(ad) {
+        const wrap = document.createElement('div');
+        wrap.className = 'ct-ads-mobile';
+        wrap.id = 'ct-ads-mobile';
+
+        const link = addReferral(ad.link, REFERRAL_TAG);
+        const imgSrc = ad.image || '';
+
+        wrap.innerHTML = `
+            <a class="ct-ad-mobile-inner" href="${escapeAttr(link)}" target="_blank" rel="noopener noreferrer">
+                ${imgSrc
+                    ? `<img class="ct-ad-mobile-img" src="${escapeAttr(imgSrc)}" alt="" loading="lazy" onerror="this.style.display='none'">`
+                    : `<div class="ct-ad-mobile-img" style="background: ${ad.color || '#06b6d4'}; display: flex; align-items: center; justify-content: center; font-size: 24px;">${ad.icon || '📢'}</div>`
+                }
+                <div class="ct-ad-mobile-content">
+                    <div class="ct-ad-mobile-title">${escapeHtml(ad.title || '')}</div>
+                    ${ad.description ? `<div class="ct-ad-mobile-desc">${escapeHtml(ad.description)}</div>` : ''}
+                </div>
+                <i class="fas fa-chevron-right ct-ad-mobile-arrow"></i>
+            </a>
+            <span class="ct-ad-mobile-label">${escapeHtml(ad.label || 'Реклама')}</span>
+        `;
+        return wrap;
+    }
+
+    // ============================================================
+    // ПРОВЕРКА ПЕРЕКРЫТИЯ
+    // ============================================================
+    function checkOverlap(el, container) {
+        if (!ADS_CONFIG.checkOverlap) return false;
+        if (window.innerWidth < ADS_CONFIG.overlapMinWidth) return false;
+
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return false;
+
+        const containerRect = container.getBoundingClientRect();
         const isLeft = container.classList.contains('ct-ads-left');
-        const allAds = isLeft ? ADS_CONFIG.left : ADS_CONFIG.right;
-        const currentCount = container.querySelectorAll('.ct-ad-card').length;
 
-        if (currentCount >= ADS_CONFIG.minPerSide) return;
+        // Ищем важные элементы
+        const candidates = document.querySelectorAll(
+            '.container, .main-container, main, .panel, .main-grid, ' +
+            '.hero, .tools-grid, .form-grid, .calculator, ' +
+            'input, textarea, button, select, ' +
+            '.btn, .tool-card, .panel-title'
+        );
 
-        const shownIds = Array.from(container.querySelectorAll('.ct-ad-card'))
-            .map(el => el.dataset.adId);
-        
-        const need = ADS_CONFIG.minPerSide - currentCount;
-        const candidates = allAds.filter(ad => !shownIds.includes(ad.id));
-        
-        if (candidates.length === 0) return;
-        
-        const picked = pickRandom(candidates, need);
-        
-        picked.forEach(ad => {
-            const card = createAdCard(ad);
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(10px)';
-            container.appendChild(card);
-            
-            requestAnimationFrame(() => {
-                card.style.transition = 'all 0.3s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            });
+        for (const c of candidates) {
+            if (c === container) continue;
+            if (container.contains(c)) continue;
+            if (el.contains(c)) continue;
+
+            const r = c.getBoundingClientRect();
+            if (r.width === 0 || r.height === 0) continue;
+
+            // Проверяем горизонтальное перекрытие
+            if (isLeft) {
+                // Левый баннер перекрывает, если элемент начинается левее правого края баннера
+                if (r.left < containerRect.right && r.right > containerRect.left) {
+                    // И по вертикали перекрывается
+                    if (r.top < containerRect.bottom && r.bottom > containerRect.top) {
+                        return true;
+                    }
+                }
+            } else {
+                // Правый баннер
+                if (r.right > containerRect.left && r.left < containerRect.right) {
+                    if (r.top < containerRect.bottom && r.bottom > containerRect.top) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    function applyOverlapCheck() {
+        if (window.innerWidth < ADS_CONFIG.overlapMinWidth) return;
+
+        const containers = document.querySelectorAll('.ct-ads-container');
+        containers.forEach(c => {
+            // Проверяем всю колонку
+            const cards = c.querySelectorAll('.ct-ad-card');
+            if (cards.length === 0) return;
+
+            // Проверяем — не перекрывает ли контейнер важные элементы
+            let overlap = false;
+            for (const card of cards) {
+                if (checkOverlap(card, c)) {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            if (overlap) {
+                // Прячем контейнер
+                c.style.opacity = '0';
+                c.style.pointerEvents = 'none';
+                c.dataset.hiddenByOverlap = '1';
+            } else if (c.dataset.hiddenByOverlap === '1') {
+                c.style.opacity = '';
+                c.style.pointerEvents = '';
+                delete c.dataset.hiddenByOverlap;
+            }
         });
     }
 
-    function escapeHtml(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
-    function escapeAttr(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+    // ============================================================
+    // ПОЛНОЭКРАННАЯ РЕКЛАМА
+    // ============================================================
+    let fullscreenTimer = null;
+    let fullscreenFirstTimer = null;
+    let currentFullscreenOverlay = null;
+
+    function showFullscreenAd() {
+        if (!ADS_CONFIG.enabled) return;
+        if (!ADS_CONFIG.ads || ADS_CONFIG.ads.length === 0) return;
+
+        // Если уже показан — не дублируем
+        if (currentFullscreenOverlay) return;
+
+        const ad = ADS_CONFIG.ads[Math.floor(Math.random() * ADS_CONFIG.ads.length)];
+        if (!ad) return;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'ct-ads-fullscreen-overlay';
+        currentFullscreenOverlay = overlay;
+
+        const finalLink = addReferral(ad.link, REFERRAL_TAG);
+        const imgHtml = ad.image
+            ? `<img class="ct-ads-fullscreen-image" src="${escapeAttr(ad.image)}" alt="" onerror="this.style.display='none'">`
+            : '';
+
+        overlay.innerHTML = `
+            <div class="ct-ads-fullscreen">
+                <span class="ct-ads-fullscreen-label">Реклама</span>
+                <button class="ct-ads-fullscreen-close" type="button" aria-label="Закрыть">✕</button>
+                <div class="ct-ads-fullscreen-topbar" style="background: ${ad.color || '#06b6d4'};"></div>
+                ${imgHtml}
+                <div class="ct-ads-fullscreen-body">
+                    ${ad.icon ? `<div class="ct-ads-fullscreen-icon">${ad.icon}</div>` : ''}
+                    <div class="ct-ads-fullscreen-title">${escapeHtml(ad.title || '')}</div>
+                    ${ad.description ? `<div class="ct-ads-fullscreen-desc">${escapeHtml(ad.description)}</div>` : ''}
+                    <a class="ct-ads-fullscreen-btn" href="${escapeAttr(finalLink)}" target="_blank" rel="noopener noreferrer" style="background: ${ad.color || '#06b6d4'};">
+                        ${escapeHtml(ad.buttonText || 'Подробнее')}
+                    </a>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        document.body.style.overflow = 'hidden';
+
+        requestAnimationFrame(() => overlay.classList.add('show'));
+
+        const closeBtn = overlay.querySelector('.ct-ads-fullscreen-close');
+        const closeHandler = () => closeFullscreenAd();
+        closeBtn.addEventListener('click', closeHandler);
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeFullscreenAd();
+        });
+
+        const escHandler = (e) => {
+            if (e.key === 'Escape') closeFullscreenAd();
+        };
+        document.addEventListener('keydown', escHandler);
+        overlay._escHandler = escHandler;
     }
 
-    function createContainer(side) {
-        const container = document.createElement('div');
-        container.className = `ct-ads-container ct-ads-${side}`;
-        container.setAttribute('aria-label', side === 'left' ? 'Реклама слева' : 'Реклама справа');
-        container.dataset.side = side;
-        return container;
-    }
+    function closeFullscreenAd() {
+        if (!currentFullscreenOverlay) return;
+        const overlay = currentFullscreenOverlay;
+        currentFullscreenOverlay = null;
 
-    function fillContainer(container, ads) {
-        const adsToShow = selectAdsToShow(ads);
-
-        if (adsToShow.length === 0) {
-            container.style.display = 'none';
-            return;
+        if (overlay._escHandler) {
+            document.removeEventListener('keydown', overlay._escHandler);
         }
 
-        adsToShow.forEach(ad => {
-            container.appendChild(createAdCard(ad));
-        });
+        overlay.classList.remove('show');
+        document.body.style.overflow = '';
+
+        setTimeout(() => {
+            if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        }, 300);
+    }
+
+    function startFullscreenTimer() {
+        if (!ADS_CONFIG.fullscreenInterval || ADS_CONFIG.fullscreenInterval <= 0) return;
+
+        // Первый показ
+        if (ADS_CONFIG.fullscreenFirstDelay && ADS_CONFIG.fullscreenFirstDelay > 0) {
+            fullscreenFirstTimer = setTimeout(() => {
+                showFullscreenAd();
+            }, ADS_CONFIG.fullscreenFirstDelay);
+        }
+
+        // Периодический показ
+        fullscreenTimer = setInterval(() => {
+            showFullscreenAd();
+        }, ADS_CONFIG.fullscreenInterval);
+    }
+
+    function stopFullscreenTimer() {
+        if (fullscreenTimer) { clearInterval(fullscreenTimer); fullscreenTimer = null; }
+        if (fullscreenFirstTimer) { clearTimeout(fullscreenFirstTimer); fullscreenFirstTimer = null; }
+        closeFullscreenAd();
     }
 
     // ============================================================
     // ИНИЦИАЛИЗАЦИЯ
     // ============================================================
-
     function init() {
         if (!ADS_CONFIG.enabled) return;
-
-        cleanupHiddenMap();
 
         if (!document.getElementById('ct-ads-styles')) {
             const styleEl = document.createElement('style');
@@ -578,45 +756,73 @@
             document.head.appendChild(styleEl);
         }
 
-        const leftContainer = createContainer('left');
-        const rightContainer = createContainer('right');
+        const allAds = ADS_CONFIG.ads || [];
+        if (allAds.length === 0) return;
 
-        if (ADS_CONFIG.left && ADS_CONFIG.left.length > 0) {
-            fillContainer(leftContainer, ADS_CONFIG.left);
-            if (leftContainer.children.length > 0) {
-                document.body.appendChild(leftContainer);
+        const isMobile = window.innerWidth <= 1200;
+
+        if (isMobile) {
+            // Мобильный: один баннер сверху
+            const adCount = Math.min(ADS_CONFIG.mobileMax, allAds.length);
+            const picked = pickRandom(allAds, adCount);
+            if (picked.length > 0) {
+                const banner = createMobileBanner(picked[0]);
+                document.body.insertBefore(banner, document.body.firstChild);
+                setTimeout(() => banner.classList.add('visible'), ADS_CONFIG.delay);
             }
-        }
-        if (ADS_CONFIG.right && ADS_CONFIG.right.length > 0) {
-            fillContainer(rightContainer, ADS_CONFIG.right);
-            if (rightContainer.children.length > 0) {
-                document.body.appendChild(rightContainer);
-            }
-        }
+        } else {
+            // Десктоп: две колонки
+            const leftAds = allAds.filter(a => a.id.startsWith('ad-left-'));
+            const rightAds = allAds.filter(a => a.id.startsWith('ad-right-'));
 
-        setTimeout(() => {
-            if (leftContainer.parentNode) leftContainer.classList.add('visible');
-            if (rightContainer.parentNode) rightContainer.classList.add('visible');
-        }, ADS_CONFIG.delay);
+            const leftContainer = document.createElement('div');
+            leftContainer.className = 'ct-ads-container ct-ads-left';
+            leftContainer.dataset.side = 'left';
 
-        window.addEventListener('resize', () => {
-            [leftContainer, rightContainer].forEach(c => {
-                if (c.parentNode && c.querySelectorAll('.ct-ad-card').length === 0) {
-                    c.style.display = 'none';
-                }
+            const rightContainer = document.createElement('div');
+            rightContainer.className = 'ct-ads-container ct-ads-right';
+            rightContainer.dataset.side = 'right';
+
+            const leftPicked = pickRandom(leftAds, Math.min(ADS_CONFIG.maxPerSide, leftAds.length));
+            leftPicked.forEach(ad => leftContainer.appendChild(createAdCard(ad)));
+
+            const rightPicked = pickRandom(rightAds, Math.min(ADS_CONFIG.maxPerSide, rightAds.length));
+            rightPicked.forEach(ad => rightContainer.appendChild(createAdCard(ad)));
+
+            if (leftContainer.children.length > 0) document.body.appendChild(leftContainer);
+            if (rightContainer.children.length > 0) document.body.appendChild(rightContainer);
+
+            setTimeout(() => {
+                if (leftContainer.parentNode) leftContainer.classList.add('visible');
+                if (rightContainer.parentNode) rightContainer.classList.add('visible');
+                // Проверяем перекрытие после появления
+                setTimeout(applyOverlapCheck, 300);
+            }, ADS_CONFIG.delay);
+
+            // Проверка перекрытия при ресайзе (с дебаунсом)
+            let resizeTimer = null;
+            window.addEventListener('resize', () => {
+                if (resizeTimer) clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    applyOverlapCheck();
+                }, 250);
             });
-        });
 
-        // Периодическая проверка: не пора ли вернуть какую-то рекламу?
-        setInterval(() => {
-            [leftContainer, rightContainer].forEach(c => {
-                if (!c.parentNode) return;
-                const currentCount = c.querySelectorAll('.ct-ad-card').length;
-                if (currentCount < ADS_CONFIG.minPerSide) {
-                    refillContainer(c);
-                }
-            });
-        }, 60 * 1000);
+            // Проверка перекрытия при скролле (для fixed-элементов и модалок)
+            let scrollTimer = null;
+            window.addEventListener('scroll', () => {
+                if (scrollTimer) return;
+                scrollTimer = setTimeout(() => {
+                    applyOverlapCheck();
+                    scrollTimer = null;
+                }, 300);
+            }, { passive: true });
+        }
+
+        // Полноэкранная реклама (только на десктопе и планшетах)
+        if (window.innerWidth > 768) {
+            startFullscreenTimer();
+        }
     }
 
     if (document.readyState === 'loading') {
@@ -631,39 +837,34 @@
     window.CreativeAds = {
         config: ADS_CONFIG,
         referral: REFERRAL_TAG,
-        
+
         show: () => {
             ADS_CONFIG.enabled = true;
-            document.querySelectorAll('.ct-ads-container').forEach(c => c.classList.add('visible'));
+            document.querySelectorAll('.ct-ads-container').forEach(c => {
+                c.classList.add('visible');
+                c.style.opacity = '';
+                c.style.pointerEvents = '';
+            });
+            document.querySelectorAll('.ct-ads-mobile').forEach(c => c.classList.add('visible'));
         },
         hide: () => {
             document.querySelectorAll('.ct-ads-container').forEach(c => c.classList.remove('visible'));
+            document.querySelectorAll('.ct-ads-mobile').forEach(c => c.classList.remove('visible'));
         },
-        
-        resetAll: () => {
-            localStorage.removeItem(STORAGE_KEY);
-            document.querySelectorAll('.ct-ads-container').forEach(c => c.remove());
-            init();
-        },
-        
+
         reshuffle: () => {
-            document.querySelectorAll('.ct-ads-container').forEach(c => c.remove());
+            // Пересоздаём контейнеры заново
+            document.querySelectorAll('.ct-ads-container, .ct-ads-mobile').forEach(c => c.remove());
+            stopFullscreenTimer();
             init();
+            if (window.innerWidth > 768) startFullscreenTimer();
         },
-        
-        debugHidden: () => {
-            const map = getHiddenMap();
-            const now = Date.now();
-            console.table(
-                Object.entries(map).map(([id, ts]) => ({
-                    id,
-                    hiddenAt: new Date(ts).toLocaleString('ru-RU'),
-                    elapsedMin: Math.round((now - ts) / 60000),
-                    willReturnIn: Math.max(0, Math.round((ADS_CONFIG.softHideDuration - (now - ts)) / 60000)) + ' мин'
-                }))
-            );
-        },
-        
+
+        showFullscreen: () => showFullscreenAd(),
+        closeFullscreen: () => closeFullscreenAd(),
+
+        checkOverlap: () => applyOverlapCheck(),
+
         addRef: (url) => addReferral(url, REFERRAL_TAG)
     };
 
