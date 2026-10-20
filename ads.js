@@ -37,7 +37,7 @@
                 color: '#5e72e4',
                 icon: '🚀',
                 label: 'Реклама',
-                image: 'images/taiprompts.png'
+                image: 'https://timoshamoscow.github.io/images/taiprompts.png'
             },
             {
                 id: 'ad-left-2',
@@ -48,7 +48,7 @@
                 color: '#00ba22',
                 icon: '🎚️',
                 label: 'Реклама',
-                image: 'images/yatavostore.png'
+                image: 'https://timoshamoscow.github.io/images/yatavostore.png'
             },
             {
                 id: 'ad-left-3',
@@ -59,7 +59,7 @@
                 color: '#00ba22',
                 icon: '🎮',
                 label: 'Реклама',
-                image: 'images/millida.png'
+                image: 'https://timoshamoscow.github.io/images/millida.png'
             },
             {
                 id: 'ad-left-4',
@@ -70,7 +70,7 @@
                 color: '#3b82f6',
                 icon: '🎨',
                 label: 'Реклама',
-                image: 'images/tstudios.png'
+                image: 'https://timoshamoscow.github.io/images/tstudios.png'
             },
             {
                 id: 'ad-right-1',
@@ -81,7 +81,7 @@
                 color: '#ff0000',
                 icon: '🖥️',
                 label: 'Реклама',
-                image: 'images/tplyer.png'
+                image: 'https://timoshamoscow.github.io/images/tplyer.png'
             },
             {
                 id: 'ad-right-2',
@@ -92,7 +92,7 @@
                 color: '#3ea9bf',
                 icon: '🎥',
                 label: 'Реклама',
-                image: 'images/creativet.png'
+                image: 'https://timoshamoscow.github.io/images/creativet.png'
             },
             {
                 id: 'ad-right-3',
@@ -103,7 +103,7 @@
                 color: '#3ea9bf',
                 icon: '🔮',
                 label: 'Реклама',
-                image: 'images/syb.png'
+                image: 'https://timoshamoscow.github.io/images/syb.png'
             },
             {
                 id: 'ad-right-4',
@@ -114,7 +114,7 @@
                 color: '#ff0000',
                 icon: '🔥',
                 label: 'Реклама',
-                image: 'images/bagryanez.png'
+                image: 'https://timoshamoscow.github.io/images/bagryanez.png'
             }
         ]
     };
