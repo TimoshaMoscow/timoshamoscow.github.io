@@ -211,12 +211,27 @@
             width: 100%;
             background: #06b6d4;
         }
-        .ct-ad-image {
+        .ct-ad-image-wrap {
+            position: relative;
             width: 100%;
             height: 100px;
-            object-fit: cover;
+            overflow: hidden;
             background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+        }
+        .ct-ad-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
+        }
+        .ct-ad-image-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
         }
         .ct-ad-label {
             position: absolute;
@@ -303,6 +318,16 @@
             flex-shrink: 0;
             background: linear-gradient(135deg, #e0f2fe, #bae6fd);
         }
+        .ct-ad-mobile-img-fallback {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+        }
         .ct-ad-mobile-content {
             flex: 1;
             min-width: 0;
@@ -374,6 +399,8 @@
             position: relative;
             transform: scale(0.9);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
         }
         .ct-ads-fullscreen-overlay.show .ct-ads-fullscreen {
             transform: scale(1);
@@ -381,16 +408,34 @@
         .ct-ads-fullscreen-topbar {
             height: 6px;
             width: 100%;
+            flex-shrink: 0;
+        }
+        .ct-ads-fullscreen-image-wrap {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            flex-shrink: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
         }
         .ct-ads-fullscreen-image {
             width: 100%;
-            height: 220px;
+            height: 100%;
             object-fit: cover;
-            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
             display: block;
+        }
+        .ct-ads-fullscreen-image-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
         }
         .ct-ads-fullscreen-body {
             padding: 24px 24px 22px;
+            overflow-y: auto;
         }
         .ct-ads-fullscreen-icon {
             font-size: 32px;
@@ -486,7 +531,7 @@
             .ct-ads-fullscreen-body { padding: 20px 18px 18px; }
             .ct-ads-fullscreen-title { font-size: 17px; }
             .ct-ads-fullscreen-desc { font-size: 13px; }
-            .ct-ads-fullscreen-image { height: 180px; }
+            .ct-ads-fullscreen-image-wrap { height: 180px; }
         }
 
         [data-theme="dark"] .ct-ad-card,
@@ -501,11 +546,43 @@
         [data-theme="dark"] .ct-ad-mobile-desc,
         [data-theme="dark"] .ct-ads-fullscreen-desc { color: #9ca3af; }
         [data-theme="dark"] .ct-ads-mobile { border-color: #374151; }
+        [data-theme="dark"] .ct-ad-label { background: #111827; border-color: #374151; color: #6b7280; }
+        [data-theme="dark"] .ct-ads-fullscreen-close { background: #111827; color: #9ca3af; }
+        [data-theme="dark"] .ct-ads-fullscreen-label { background: #111827; color: #9ca3af; }
     `;
 
     // ============================================================
     // СОЗДАНИЕ КАРТОЧЕК
     // ============================================================
+
+    /**
+     * Безопасно создаёт блок с картинкой или фолбэком (иконка).
+     * Если ad.image пустой или не загружается — показывается иконка.
+     */
+    function buildImageBlock(ad, imgClass, fallbackClass) {
+        const wrapClass = imgClass.replace('-image', '-image-wrap');
+        const iconChar = ad.icon || '📢';
+        const bg = ad.color || '#06b6d4';
+
+        if (ad.image) {
+            // Оборачиваем в контейнер, чтобы при ошибке загрузки подменить на фолбэк
+            return `
+                <div class="${wrapClass}">
+                    <img class="${imgClass}" src="${escapeAttr(ad.image)}" alt=""
+                         loading="lazy"
+                         onerror="this.outerHTML='&lt;div class=&quot;${fallbackClass}&quot; style=&quot;background:linear-gradient(135deg, ${bg}22, ${bg}44); color:${bg};&quot;&gt;${escapeHtml(iconChar)}&lt;/div&gt;'">
+                </div>
+            `;
+        }
+        // Нет картинки — сразу фолбэк с иконкой на цветном фоне
+        return `
+            <div class="${wrapClass}">
+                <div class="${fallbackClass}" style="background:linear-gradient(135deg, ${bg}22, ${bg}44); color:${bg};">
+                    ${escapeHtml(iconChar)}
+                </div>
+            </div>
+        `;
+    }
 
     function createAdCard(ad) {
         const card = document.createElement('a');
@@ -515,16 +592,14 @@
         card.target = '_blank';
         card.rel = 'noopener noreferrer';
 
-        const imgHtml = ad.image
-            ? `<img class="ct-ad-image" src="${escapeAttr(ad.image)}" alt="" loading="lazy" onerror="this.style.display='none'">`
-            : '';
+        // Картинка сверху карточки
+        const imageHtml = buildImageBlock(ad, 'ct-ad-image', 'ct-ad-image-fallback');
 
         card.innerHTML = `
             <div class="ct-ad-topbar" style="background: ${ad.color || '#06b6d4'};"></div>
-            ${imgHtml}
+            ${imageHtml}
             <span class="ct-ad-label">${escapeHtml(ad.label || 'Реклама')}</span>
             <div class="ct-ad-body">
-                ${ad.icon ? `<div class="ct-ad-icon">${ad.icon}</div>` : ''}
                 <div class="ct-ad-title">${escapeHtml(ad.title || '')}</div>
                 ${ad.description ? `<div class="ct-ad-description">${escapeHtml(ad.description)}</div>` : ''}
                 <div class="ct-ad-btn" style="background: ${ad.color || '#06b6d4'};">
@@ -541,14 +616,22 @@
         wrap.id = 'ct-ads-mobile';
 
         const link = addReferral(ad.link, REFERRAL_TAG);
-        const imgSrc = ad.image || '';
+        const bg = ad.color || '#06b6d4';
+        const iconChar = ad.icon || '📢';
+
+        // Картинка / фолбэк
+        let imgHtml;
+        if (ad.image) {
+            imgHtml = `<img class="ct-ad-mobile-img" src="${escapeAttr(ad.image)}" alt=""
+                            loading="lazy"
+                            onerror="this.outerHTML='&lt;div class=&quot;ct-ad-mobile-img-fallback&quot; style=&quot;background:linear-gradient(135deg, ${bg}22, ${bg}44); color:${bg};&quot;&gt;${escapeHtml(iconChar)}&lt;/div&gt;'">`;
+        } else {
+            imgHtml = `<div class="ct-ad-mobile-img-fallback" style="background:linear-gradient(135deg, ${bg}22, ${bg}44); color:${bg};">${escapeHtml(iconChar)}</div>`;
+        }
 
         wrap.innerHTML = `
             <a class="ct-ad-mobile-inner" href="${escapeAttr(link)}" target="_blank" rel="noopener noreferrer">
-                ${imgSrc
-                    ? `<img class="ct-ad-mobile-img" src="${escapeAttr(imgSrc)}" alt="" loading="lazy" onerror="this.style.display='none'">`
-                    : `<div class="ct-ad-mobile-img" style="background: ${ad.color || '#06b6d4'}; display: flex; align-items: center; justify-content: center; font-size: 24px;">${ad.icon || '📢'}</div>`
-                }
+                ${imgHtml}
                 <div class="ct-ad-mobile-content">
                     <div class="ct-ad-mobile-title">${escapeHtml(ad.title || '')}</div>
                     ${ad.description ? `<div class="ct-ad-mobile-desc">${escapeHtml(ad.description)}</div>` : ''}
@@ -573,7 +656,6 @@
         const containerRect = container.getBoundingClientRect();
         const isLeft = container.classList.contains('ct-ads-left');
 
-        // Ищем важные элементы
         const candidates = document.querySelectorAll(
             '.container, .main-container, main, .panel, .main-grid, ' +
             '.hero, .tools-grid, .form-grid, .calculator, ' +
@@ -589,17 +671,13 @@
             const r = c.getBoundingClientRect();
             if (r.width === 0 || r.height === 0) continue;
 
-            // Проверяем горизонтальное перекрытие
             if (isLeft) {
-                // Левый баннер перекрывает, если элемент начинается левее правого края баннера
                 if (r.left < containerRect.right && r.right > containerRect.left) {
-                    // И по вертикали перекрывается
                     if (r.top < containerRect.bottom && r.bottom > containerRect.top) {
                         return true;
                     }
                 }
             } else {
-                // Правый баннер
                 if (r.right > containerRect.left && r.left < containerRect.right) {
                     if (r.top < containerRect.bottom && r.bottom > containerRect.top) {
                         return true;
@@ -615,11 +693,9 @@
 
         const containers = document.querySelectorAll('.ct-ads-container');
         containers.forEach(c => {
-            // Проверяем всю колонку
             const cards = c.querySelectorAll('.ct-ad-card');
             if (cards.length === 0) return;
 
-            // Проверяем — не перекрывает ли контейнер важные элементы
             let overlap = false;
             for (const card of cards) {
                 if (checkOverlap(card, c)) {
@@ -629,7 +705,6 @@
             }
 
             if (overlap) {
-                // Прячем контейнер
                 c.style.opacity = '0';
                 c.style.pointerEvents = 'none';
                 c.dataset.hiddenByOverlap = '1';
@@ -651,8 +726,6 @@
     function showFullscreenAd() {
         if (!ADS_CONFIG.enabled) return;
         if (!ADS_CONFIG.ads || ADS_CONFIG.ads.length === 0) return;
-
-        // Если уже показан — не дублируем
         if (currentFullscreenOverlay) return;
 
         const ad = ADS_CONFIG.ads[Math.floor(Math.random() * ADS_CONFIG.ads.length)];
@@ -663,21 +736,38 @@
         currentFullscreenOverlay = overlay;
 
         const finalLink = addReferral(ad.link, REFERRAL_TAG);
-        const imgHtml = ad.image
-            ? `<img class="ct-ads-fullscreen-image" src="${escapeAttr(ad.image)}" alt="" onerror="this.style.display='none'">`
-            : '';
+        const bg = ad.color || '#06b6d4';
+        const iconChar = ad.icon || '📢';
+
+        // Картинка / фолбэк
+        let imageHtml;
+        if (ad.image) {
+            imageHtml = `
+                <div class="ct-ads-fullscreen-image-wrap">
+                    <img class="ct-ads-fullscreen-image" src="${escapeAttr(ad.image)}" alt=""
+                         onerror="this.outerHTML='&lt;div class=&quot;ct-ads-fullscreen-image-fallback&quot; style=&quot;background:linear-gradient(135deg, ${bg}22, ${bg}44); color:${bg};&quot;&gt;${escapeHtml(iconChar)}&lt;/div&gt;'">
+                </div>
+            `;
+        } else {
+            imageHtml = `
+                <div class="ct-ads-fullscreen-image-wrap">
+                    <div class="ct-ads-fullscreen-image-fallback" style="background:linear-gradient(135deg, ${bg}22, ${bg}44); color:${bg};">
+                        ${escapeHtml(iconChar)}
+                    </div>
+                </div>
+            `;
+        }
 
         overlay.innerHTML = `
             <div class="ct-ads-fullscreen">
                 <span class="ct-ads-fullscreen-label">Реклама</span>
                 <button class="ct-ads-fullscreen-close" type="button" aria-label="Закрыть">✕</button>
-                <div class="ct-ads-fullscreen-topbar" style="background: ${ad.color || '#06b6d4'};"></div>
-                ${imgHtml}
+                <div class="ct-ads-fullscreen-topbar" style="background: ${bg};"></div>
+                ${imageHtml}
                 <div class="ct-ads-fullscreen-body">
-                    ${ad.icon ? `<div class="ct-ads-fullscreen-icon">${ad.icon}</div>` : ''}
                     <div class="ct-ads-fullscreen-title">${escapeHtml(ad.title || '')}</div>
                     ${ad.description ? `<div class="ct-ads-fullscreen-desc">${escapeHtml(ad.description)}</div>` : ''}
-                    <a class="ct-ads-fullscreen-btn" href="${escapeAttr(finalLink)}" target="_blank" rel="noopener noreferrer" style="background: ${ad.color || '#06b6d4'};">
+                    <a class="ct-ads-fullscreen-btn" href="${escapeAttr(finalLink)}" target="_blank" rel="noopener noreferrer" style="background: ${bg};">
                         ${escapeHtml(ad.buttonText || 'Подробнее')}
                     </a>
                 </div>
@@ -690,8 +780,7 @@
         requestAnimationFrame(() => overlay.classList.add('show'));
 
         const closeBtn = overlay.querySelector('.ct-ads-fullscreen-close');
-        const closeHandler = () => closeFullscreenAd();
-        closeBtn.addEventListener('click', closeHandler);
+        closeBtn.addEventListener('click', () => closeFullscreenAd());
 
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) closeFullscreenAd();
@@ -724,14 +813,12 @@
     function startFullscreenTimer() {
         if (!ADS_CONFIG.fullscreenInterval || ADS_CONFIG.fullscreenInterval <= 0) return;
 
-        // Первый показ
         if (ADS_CONFIG.fullscreenFirstDelay && ADS_CONFIG.fullscreenFirstDelay > 0) {
             fullscreenFirstTimer = setTimeout(() => {
                 showFullscreenAd();
             }, ADS_CONFIG.fullscreenFirstDelay);
         }
 
-        // Периодический показ
         fullscreenTimer = setInterval(() => {
             showFullscreenAd();
         }, ADS_CONFIG.fullscreenInterval);
@@ -762,7 +849,6 @@
         const isMobile = window.innerWidth <= 1200;
 
         if (isMobile) {
-            // Мобильный: один баннер сверху
             const adCount = Math.min(ADS_CONFIG.mobileMax, allAds.length);
             const picked = pickRandom(allAds, adCount);
             if (picked.length > 0) {
@@ -771,7 +857,6 @@
                 setTimeout(() => banner.classList.add('visible'), ADS_CONFIG.delay);
             }
         } else {
-            // Десктоп: две колонки
             const leftAds = allAds.filter(a => a.id.startsWith('ad-left-'));
             const rightAds = allAds.filter(a => a.id.startsWith('ad-right-'));
 
@@ -795,11 +880,9 @@
             setTimeout(() => {
                 if (leftContainer.parentNode) leftContainer.classList.add('visible');
                 if (rightContainer.parentNode) rightContainer.classList.add('visible');
-                // Проверяем перекрытие после появления
                 setTimeout(applyOverlapCheck, 300);
             }, ADS_CONFIG.delay);
 
-            // Проверка перекрытия при ресайзе (с дебаунсом)
             let resizeTimer = null;
             window.addEventListener('resize', () => {
                 if (resizeTimer) clearTimeout(resizeTimer);
@@ -808,7 +891,6 @@
                 }, 250);
             });
 
-            // Проверка перекрытия при скролле (для fixed-элементов и модалок)
             let scrollTimer = null;
             window.addEventListener('scroll', () => {
                 if (scrollTimer) return;
@@ -819,7 +901,6 @@
             }, { passive: true });
         }
 
-        // Полноэкранная реклама (только на десктопе и планшетах)
         if (window.innerWidth > 768) {
             startFullscreenTimer();
         }
@@ -853,7 +934,6 @@
         },
 
         reshuffle: () => {
-            // Пересоздаём контейнеры заново
             document.querySelectorAll('.ct-ads-container, .ct-ads-mobile').forEach(c => c.remove());
             stopFullscreenTimer();
             init();
