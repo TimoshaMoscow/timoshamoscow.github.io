@@ -17,16 +17,24 @@
         mobileMax: 1,
 
         // Интервал показа полноэкранной рекламы (мс). 0 = выключено
-        fullscreenInterval: 1000 * 60 * 3, // 3 минуты
-        // Задержка перед первым полноэкранным показом
-        fullscreenFirstDelay: 1000 * 30, // 30 секунд
+        fullscreenInterval: 1000 * 60 * 3,
+        fullscreenFirstDelay: 1000 * 30,
 
-        // Проверка перекрытия важных элементов (на ПК)
+        // Проверка перекрытия важных элементов
         checkOverlap: true,
-        // Минимальная ширина экрана для проверки перекрытия
+        // Минимальная ширина экрана для проверки (на мобилке своя логика)
         overlapMinWidth: 1200,
 
-        // Всё рекламное наполнение в одном массиве
+        // Как вести себя при перекрытии:
+        // 'hide'   — прятать баннер до освобождения места
+        // 'shift'  — искать свободное место (сдвиг вверх/вниз)
+        overlapStrategy: 'shift',
+
+        // Отступ для поиска свободного места (px)
+        shiftStep: 40,
+        // Максимальный сдвиг (px)
+        maxShift: 400,
+
         ads: [
             {
                 id: 'ad-left-1',
@@ -166,7 +174,6 @@
     // СТИЛИ
     // ============================================================
     const AD_STYLES = `
-        /* === Десктопные боковые баннеры === */
         .ct-ads-container {
             position: fixed;
             top: 50%;
@@ -177,12 +184,18 @@
             gap: 20px;
             pointer-events: none;
             width: 180px;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
             opacity: 0;
         }
         .ct-ads-container.visible {
             opacity: 1;
             pointer-events: auto;
+        }
+        /* Скрыто из-за перекрытия — плавно */
+        .ct-ads-container.ct-ads-obstructed {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transform: translateY(-50%) scale(0.95);
         }
         .ct-ads-left { left: 15px; }
         .ct-ads-right { right: 15px; }
@@ -301,8 +314,18 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             padding: 8px 12px;
             padding-top: calc(8px + env(safe-area-inset-top, 0px));
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
         .ct-ads-mobile.visible { display: block; }
+        .ct-ads-mobile.ct-ads-mobile-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-100%);
+            height: 0;
+            padding: 0;
+            overflow: hidden;
+            border: none;
+        }
         .ct-ad-mobile-inner {
             display: flex;
             align-items: center;
@@ -437,10 +460,6 @@
             padding: 24px 24px 22px;
             overflow-y: auto;
         }
-        .ct-ads-fullscreen-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
         .ct-ads-fullscreen-title {
             font-size: 20px;
             font-weight: 800;
@@ -554,18 +573,12 @@
     // ============================================================
     // СОЗДАНИЕ КАРТОЧЕК
     // ============================================================
-
-    /**
-     * Безопасно создаёт блок с картинкой или фолбэком (иконка).
-     * Если ad.image пустой или не загружается — показывается иконка.
-     */
     function buildImageBlock(ad, imgClass, fallbackClass) {
         const wrapClass = imgClass.replace('-image', '-image-wrap');
         const iconChar = ad.icon || '📢';
         const bg = ad.color || '#06b6d4';
 
         if (ad.image) {
-            // Оборачиваем в контейнер, чтобы при ошибке загрузки подменить на фолбэк
             return `
                 <div class="${wrapClass}">
                     <img class="${imgClass}" src="${escapeAttr(ad.image)}" alt=""
@@ -574,7 +587,6 @@
                 </div>
             `;
         }
-        // Нет картинки — сразу фолбэк с иконкой на цветном фоне
         return `
             <div class="${wrapClass}">
                 <div class="${fallbackClass}" style="background:linear-gradient(135deg, ${bg}22, ${bg}44); color:${bg};">
@@ -592,7 +604,6 @@
         card.target = '_blank';
         card.rel = 'noopener noreferrer';
 
-        // Картинка сверху карточки
         const imageHtml = buildImageBlock(ad, 'ct-ad-image', 'ct-ad-image-fallback');
 
         card.innerHTML = `
@@ -619,7 +630,6 @@
         const bg = ad.color || '#06b6d4';
         const iconChar = ad.icon || '📢';
 
-        // Картинка / фолбэк
         let imgHtml;
         if (ad.image) {
             imgHtml = `<img class="ct-ad-mobile-img" src="${escapeAttr(ad.image)}" alt=""
@@ -644,76 +654,211 @@
     }
 
     // ============================================================
-    // ПРОВЕРКА ПЕРЕКРЫТИЯ
+    // ГЕОМЕТРИЯ И ПЕРЕКРЫТИЯ
     // ============================================================
-    function checkOverlap(el, container) {
-        if (!ADS_CONFIG.checkOverlap) return false;
-        if (window.innerWidth < ADS_CONFIG.overlapMinWidth) return false;
 
-        const rect = el.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) return false;
+    /**
+     * Собирает список важных элементов, которые нельзя перекрывать.
+     * Исключает сами рекламные контейнеры.
+     */
+    function getImportantElements() {
+        const selectors = [
+            '.container', '.main-container', 'main', '.panel', '.main-grid',
+            '.hero', '.tools-grid', '.form-grid', '.calculator',
+            'input', 'textarea', 'button', 'select',
+            '.btn', '.tool-card', '.panel-title', '.footer-logo',
+            '.hero-title', '.hero-description'
+        ];
+        const set = new Set();
+        selectors.forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => {
+                if (el.closest('.ct-ads-container, .ct-ads-mobile, .ct-ads-fullscreen-overlay')) return;
+                if (!el.offsetParent && getComputedStyle(el).position !== 'fixed') return;
+                const r = el.getBoundingClientRect();
+                if (r.width === 0 || r.height === 0) return;
+                set.add(el);
+            });
+        });
+        return Array.from(set);
+    }
 
-        const containerRect = container.getBoundingClientRect();
-        const isLeft = container.classList.contains('ct-ads-left');
-
-        const candidates = document.querySelectorAll(
-            '.container, .main-container, main, .panel, .main-grid, ' +
-            '.hero, .tools-grid, .form-grid, .calculator, ' +
-            'input, textarea, button, select, ' +
-            '.btn, .tool-card, .panel-title'
-        );
-
-        for (const c of candidates) {
-            if (c === container) continue;
-            if (container.contains(c)) continue;
-            if (el.contains(c)) continue;
-
-            const r = c.getBoundingClientRect();
+    /**
+     * Проверяет, пересекается ли прямоугольник rect с каким-либо важным элементом.
+     */
+    function rectOverlapsImportant(rect, importantEls) {
+        for (const el of importantEls) {
+            const r = el.getBoundingClientRect();
             if (r.width === 0 || r.height === 0) continue;
-
-            if (isLeft) {
-                if (r.left < containerRect.right && r.right > containerRect.left) {
-                    if (r.top < containerRect.bottom && r.bottom > containerRect.top) {
-                        return true;
-                    }
-                }
-            } else {
-                if (r.right > containerRect.left && r.left < containerRect.right) {
-                    if (r.top < containerRect.bottom && r.bottom > containerRect.top) {
-                        return true;
-                    }
-                }
+            if (
+                rect.left < r.right &&
+                rect.right > r.left &&
+                rect.top < r.bottom &&
+                rect.bottom > r.top
+            ) {
+                return true;
             }
         }
         return false;
     }
 
-    function applyOverlapCheck() {
+    /**
+     * Пытается найти свободное вертикальное положение для рекламного контейнера.
+     * Возвращает { top, found } где top — рекомендуемое значение top в px,
+     * либо null, если места нет.
+     */
+    function findFreeVerticalPosition(container, importantEls) {
+        const containerWidth = container.offsetWidth;
+        const containerHeight = container.offsetHeight;
+        const isLeft = container.classList.contains('ct-ads-left');
+
+        const viewportH = window.innerHeight;
+        const viewportW = window.innerWidth;
+
+        // Базовая левая/правая позиция
+        const sideOffset = 15;
+        const baseLeft = isLeft ? sideOffset : viewportW - sideOffset - containerWidth;
+
+        // Пробуем сдвигать от центра
+        const centerTop = (viewportH - containerHeight) / 2;
+
+        const candidates = [centerTop];
+        for (let shift = ADS_CONFIG.shiftStep; shift <= ADS_CONFIG.maxShift; shift += ADS_CONFIG.shiftStep) {
+            // Вверх
+            candidates.push(centerTop - shift);
+            // Вниз
+            candidates.push(centerTop + shift);
+        }
+
+        for (const top of candidates) {
+            // Ограничиваем сверху/снизу с небольшим отступом
+            if (top < 10) continue;
+            if (top + containerHeight > viewportH - 10) continue;
+
+            const rect = {
+                left: baseLeft,
+                right: baseLeft + containerWidth,
+                top: top,
+                bottom: top + containerHeight
+            };
+
+            if (!rectOverlapsImportant(rect, importantEls)) {
+                return { top: top, found: true };
+            }
+        }
+        return { top: null, found: false };
+    }
+
+    /**
+     * Главная функция проверки перекрытия для десктопных контейнеров.
+     * Стратегия:
+     *  - 'shift' : пробуем сдвинуть контейнер по вертикали в свободное место
+     *  - 'hide'  : прячем контейнер, если места нет (и показываем, когда появится)
+     */
+    function updateDesktopOverlap() {
         if (window.innerWidth < ADS_CONFIG.overlapMinWidth) return;
 
+        const importantEls = getImportantElements();
         const containers = document.querySelectorAll('.ct-ads-container');
-        containers.forEach(c => {
-            const cards = c.querySelectorAll('.ct-ad-card');
-            if (cards.length === 0) return;
 
-            let overlap = false;
-            for (const card of cards) {
-                if (checkOverlap(card, c)) {
-                    overlap = true;
-                    break;
+        containers.forEach(c => {
+            if (c.querySelectorAll('.ct-ad-card').length === 0) return;
+
+            const strategy = ADS_CONFIG.overlapStrategy || 'hide';
+
+            if (strategy === 'shift') {
+                const pos = findFreeVerticalPosition(c, importantEls);
+                if (pos.found) {
+                    // Нашли место — сдвигаем и показываем
+                    c.style.top = pos.top + 'px';
+                    c.style.transform = 'none';
+                    c.classList.remove('ct-ads-obstructed');
+                    c.classList.add('visible');
+                } else {
+                    // Места нет — прячем
+                    c.classList.add('ct-ads-obstructed');
+                }
+            } else {
+                // 'hide' — просто проверяем текущее положение
+                const rect = c.getBoundingClientRect();
+                const isLeft = c.classList.contains('ct-ads-left');
+                const testRect = {
+                    left: isLeft ? 15 : window.innerWidth - 15 - c.offsetWidth,
+                    right: isLeft ? 15 + c.offsetWidth : window.innerWidth - 15,
+                    top: rect.top,
+                    bottom: rect.bottom
+                };
+                if (rectOverlapsImportant(testRect, importantEls)) {
+                    c.classList.add('ct-ads-obstructed');
+                } else {
+                    c.classList.remove('ct-ads-obstructed');
+                    c.classList.add('visible');
                 }
             }
-
-            if (overlap) {
-                c.style.opacity = '0';
-                c.style.pointerEvents = 'none';
-                c.dataset.hiddenByOverlap = '1';
-            } else if (c.dataset.hiddenByOverlap === '1') {
-                c.style.opacity = '';
-                c.style.pointerEvents = '';
-                delete c.dataset.hiddenByOverlap;
-            }
         });
+    }
+
+    /**
+     * Мобильная проверка: скрываем sticky-баннер, если он перекрывает важные элементы.
+     * Здесь простое правило — если в верхней части экрана (первые ~80px) находится
+     * что-то критичное и при этом пользователь уже проскроллил — прячем.
+     * На практике sticky-баннер не перекрывает контент, т.к. он в потоке.
+     * Но если страница позиционирует хедер фиксированно — может быть наложение.
+     */
+    function updateMobileOverlap() {
+        const banner = document.querySelector('.ct-ads-mobile.visible');
+        if (!banner) return;
+
+        if (!ADS_CONFIG.checkOverlap) {
+            banner.classList.remove('ct-ads-mobile-hidden');
+            return;
+        }
+
+        const bannerRect = banner.getBoundingClientRect();
+        // Если баннер скрыт — пропускаем
+        if (bannerRect.height === 0) {
+            banner.classList.remove('ct-ads-mobile-hidden');
+            return;
+        }
+
+        const importantEls = getImportantElements();
+        let overlap = false;
+
+        // Проверяем только "верхние" важные элементы, которые могут оказаться под баннером
+        for (const el of importantEls) {
+            const r = el.getBoundingClientRect();
+            if (r.width === 0 || r.height === 0) continue;
+
+            if (
+                r.left < bannerRect.right &&
+                r.right > bannerRect.left &&
+                r.top < bannerRect.bottom &&
+                r.bottom > bannerRect.top
+            ) {
+                // Игнорируем элементы, которые сами sticky/fixed сверху
+                const pos = getComputedStyle(el).position;
+                if (pos === 'sticky' || pos === 'fixed') continue;
+                overlap = true;
+                break;
+            }
+        }
+
+        if (overlap) {
+            banner.classList.add('ct-ads-mobile-hidden');
+        } else {
+            banner.classList.remove('ct-ads-mobile-hidden');
+        }
+    }
+
+    /**
+     * Диспетчер: вызывает нужную проверку
+     */
+    function applyOverlapCheck() {
+        if (!ADS_CONFIG.checkOverlap) return;
+        if (window.innerWidth <= 1200) {
+            updateMobileOverlap();
+        } else {
+            updateDesktopOverlap();
+        }
     }
 
     // ============================================================
@@ -739,7 +884,6 @@
         const bg = ad.color || '#06b6d4';
         const iconChar = ad.icon || '📢';
 
-        // Картинка / фолбэк
         let imageHtml;
         if (ad.image) {
             imageHtml = `
@@ -854,7 +998,10 @@
             if (picked.length > 0) {
                 const banner = createMobileBanner(picked[0]);
                 document.body.insertBefore(banner, document.body.firstChild);
-                setTimeout(() => banner.classList.add('visible'), ADS_CONFIG.delay);
+                setTimeout(() => {
+                    banner.classList.add('visible');
+                    setTimeout(applyOverlapCheck, 200);
+                }, ADS_CONFIG.delay);
             }
         } else {
             const leftAds = allAds.filter(a => a.id.startsWith('ad-left-'));
@@ -880,25 +1027,37 @@
             setTimeout(() => {
                 if (leftContainer.parentNode) leftContainer.classList.add('visible');
                 if (rightContainer.parentNode) rightContainer.classList.add('visible');
+                // Проверяем перекрытие после появления
                 setTimeout(applyOverlapCheck, 300);
             }, ADS_CONFIG.delay);
 
+            // Слушаем ресайз (с дебаунсом)
             let resizeTimer = null;
             window.addEventListener('resize', () => {
                 if (resizeTimer) clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    applyOverlapCheck();
-                }, 250);
+                resizeTimer = setTimeout(applyOverlapCheck, 250);
             });
 
-            let scrollTimer = null;
+            // Слушаем скролл (с троттлингом через requestAnimationFrame)
+            let scrollScheduled = false;
             window.addEventListener('scroll', () => {
-                if (scrollTimer) return;
-                scrollTimer = setTimeout(() => {
+                if (scrollScheduled) return;
+                scrollScheduled = true;
+                requestAnimationFrame(() => {
                     applyOverlapCheck();
-                    scrollTimer = null;
-                }, 300);
+                    scrollScheduled = false;
+                });
             }, { passive: true });
+
+            // Наблюдаем за изменениями DOM и размеров важных элементов
+            if ('ResizeObserver' in window) {
+                const ro = new ResizeObserver(() => {
+                    applyOverlapCheck();
+                });
+                document.querySelectorAll('main, .container, .panel, .main-grid').forEach(el => {
+                    ro.observe(el);
+                });
+            }
         }
 
         if (window.innerWidth > 768) {
@@ -923,10 +1082,13 @@
             ADS_CONFIG.enabled = true;
             document.querySelectorAll('.ct-ads-container').forEach(c => {
                 c.classList.add('visible');
-                c.style.opacity = '';
-                c.style.pointerEvents = '';
+                c.classList.remove('ct-ads-obstructed');
             });
-            document.querySelectorAll('.ct-ads-mobile').forEach(c => c.classList.add('visible'));
+            document.querySelectorAll('.ct-ads-mobile').forEach(c => {
+                c.classList.add('visible');
+                c.classList.remove('ct-ads-mobile-hidden');
+            });
+            applyOverlapCheck();
         },
         hide: () => {
             document.querySelectorAll('.ct-ads-container').forEach(c => c.classList.remove('visible'));
